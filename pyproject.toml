@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "pypocketbase"
+version = "0.1.0"
+description = "Unofficial Async PocketBase client for python. Built on top of aiohttp and pydantic."
+authors = ["Touexe <mrrtou@protonmail.com.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiohttp = "^3.9.3"
+pydantic = "^2.6.4"
+result = "^0.16.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
