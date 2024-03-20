@@ -7,6 +7,7 @@ This is early development which I've made to ti suit my need with only basic fun
 
 - user and admin auth
 - record crud operation
+- More coming soon....
 
 ## Installation
 
@@ -17,6 +18,7 @@ pip install git+https://github.com/Touexe/pypocketbase
 ```
 
 ## Usage
+You would likely find this similar to the js sdk. You are right! Just a bit change
 
 ```python
 import asyncio
@@ -71,6 +73,23 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+```
+
+You can use Rust like `Result` type,So you can have nice error return without `exception` thrown at you. Thanks to [result](https://github.com/rustedpy/result) ✨ 
+
+Learn more at : [https://github.com/rustedpy/result](https://github.com/rustedpy/result)
+```python
+async with Pocketbase(url="http://127.0.0.1:8090", use_result=True) as client:
+        result = await client.collection("invoices").list(
+            ParamsList(
+                page=1,
+                size=10,
+                filter='status = "pending" && created > "2024-02-08 06:00:00"',
+            )
+        )
+        print(result.ok_value)
+        print(result.err_value)
 
 ```
 
