@@ -3,7 +3,7 @@
 About
 Unofficial Async PocketBase client for python. Built on top of aiohttp and pydantic.
 
-This is early development which I've made to ti suit my need with only basic functionalities :
+This is early development which I've made to to suit my needs with only basic functionalities :
 
 - user and admin auth
 - record crud operation
