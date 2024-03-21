@@ -36,7 +36,7 @@ async def _main():
         # user_data = await client.users.auth_with_password("test", "test")
 
         # or as admin
-        admin_data = client.auth_with_password(
+        admin_data = await client.auth_with_password(
             "test@example.com", "0123456789", as_admin=True
         )
         # or maybe this one
