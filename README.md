@@ -40,7 +40,7 @@ async def _main():
             "test@example.com", "0123456789", as_admin=True
         )
         # or maybe this one
-        # admin_data = client.admins.auth_with_password("test@example.com", "0123456789")
+        # admin_data = await client.admins.auth_with_password("test@example.com", "0123456789")
 
         # list and filter "invoices" collection records
         list_result : ListResult = await client.collection("invoices").list(
