@@ -1,4 +1,5 @@
 from enum import StrEnum, auto
+from typing import Any, Mapping, Type
 
 from aiohttp.client_reqrep import ClientResponse
 from pydantic import BaseModel
@@ -8,7 +9,7 @@ class ErrorResponse(BaseModel):
     code: int
     message: str
     data: dict | None = None
-    headers: dict | None = None
+    headers: dict[str, str] | None = None
     url: str
 
 
@@ -63,15 +64,16 @@ class NotImplementError(Exception):
 async def raise_error_from_response(
     response: ClientResponse,
     known_codes: tuple[int, ...],
-    exception_code: dict[int, PocketbaseException],
+    exception_code: Mapping[int, Type[PocketbaseException]],
     input: dict | None = None,
 ) -> None:
     """
     This function is used to raise an error from a response object. Return nothing if the response is successful.
     """
-    json_response = (
+    json_response: Mapping[Any, Any] = (
         await response.json() if response.content or response.status != 204 else {}
     )
+    headers = dict(response.headers)
 
     if response.status not in known_codes:
         raise UnknownError(
@@ -80,17 +82,18 @@ async def raise_error_from_response(
                 code=response.status,
                 message="Unknown error",
                 url=str(response.url),
-                headers=response.headers,
+                headers=headers,
             ),
         )
 
     if (exception := exception_code.get(response.status)) is not None:
+        message = json_response.get("message")
         error_response = ErrorResponse(
             code=response.status,
-            message=json_response.get("message"),
+            message=str(message),
             url=str(response.url),
             data=json_response.get("data"),
-            headers=response.headers,
+            headers=headers,
         )
         raise exception(
             message=error_response.message,

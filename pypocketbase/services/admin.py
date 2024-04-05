@@ -43,11 +43,14 @@ class AdminService:
     ]:
         exception_code = {400: FailedAuthentication}
         known_codes = (200, 400)
-        params = params.model_dump() if params else {}
+        dict_params = params.model_dump() if params else {}
         body = body if body is not None else {}
         body.update({"identity": username_or_email, "password": password})
         url = (
-            self.base_crud_path() + "/auth-with-password" + "?" + encode_params(params)
+            self.base_crud_path()
+            + "/auth-with-password"
+            + "?"
+            + encode_params(dict_params)
         )
         headers = {"Authorization": ""}
         async with self.session.post(url, json=body, headers=headers) as response:

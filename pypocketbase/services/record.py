@@ -45,15 +45,15 @@ class RecordService:
     ) -> Record | Result[Record, RecordNotFound | UnknownError]:
         exception_code = {404: RecordNotFound}
         known_codes = (200, 404)
-        params = params.model_dump() if params else {}
-        url = self.base_crud_path() + "/" + id + "?" + encode_params(params)
+        dict_params = params.model_dump() if params else {}
+        url = self.base_crud_path() + "/" + id + "?" + encode_params(dict_params)
 
         async with self.session.get(url=url) as response:
             await raise_error_from_response(
                 response=response,
                 known_codes=known_codes,
                 exception_code=exception_code,
-                input=params,
+                input=dict_params,
             )
             json_response = await response.json()
 
@@ -85,8 +85,8 @@ class RecordService:
     ) -> Record | Result[Record, RecordNotCreate | UnknownError]:
         exception_code = {400: RecordNotCreate, 403: PermissionError}
         known_codes = (200, 400, 403)
-        params = params.model_dump() if params else {}
-        url = self.base_crud_path() + "?" + encode_params(params)
+        dict_params = params.model_dump() if params is not None else {}
+        url = self.base_crud_path() + "?" + encode_params(dict_params)
         async with self.session.post(url, json=body) as response:
             await raise_error_from_response(
                 response=response,
@@ -108,8 +108,8 @@ class RecordService:
             404: RecordNotFound,
         }
         known_codes = (200, 400, 403, 404)
-        params = params.model_dump() if params else {}
-        url = self.base_crud_path() + "/" + record_id + "?" + encode_params(params)
+        dict_params = params.model_dump() if params else {}
+        url = self.base_crud_path() + "/" + record_id + "?" + encode_params(dict_params)
 
         async with self.session.patch(url, json=body) as response:
             await raise_error_from_response(
@@ -123,21 +123,21 @@ class RecordService:
         return Record(**json_response)
 
     @as_result(UnknownError, RecordNotDelete)
-    async def delete(self, id: str, params: ParamsOne | None = None) -> True:
+    async def delete(self, id: str, params: ParamsOne | None = None) -> bool:
         exception_code = {
             400: RecordNotDelete,
             403: PermissionError,
             404: RecordNotFound,
         }
         known_codes = (204, 400, 403, 404)
-        params = params.model_dump() if params else {}
-        url = self.base_crud_path() + "/" + id + "?" + encode_params(params)
+        dict_params = params.model_dump() if params is not None else {}
+        url = self.base_crud_path() + "/" + id + "?" + encode_params(dict_params)
         async with self.session.delete(url) as response:
             await raise_error_from_response(
                 response=response,
                 known_codes=known_codes,
                 exception_code=exception_code,
-                input=params,
+                input=dict_params,
             )
 
         return True
@@ -154,14 +154,14 @@ class RecordService:
     ]:
         exception_code = {400: FailedAuthentication}
         known_codes = (200, 400)
-        params = params.model_dump() if params else {}
+        dict_params = params.model_dump() if params is not None else {}
         body = body if body is not None else {}
         body.update({"identity": username_or_email, "password": password})
         url = (
             self.base_collection_path()
             + "/auth-with-password"
             + "?"
-            + encode_params(params)
+            + encode_params(dict_params)
         )
         headers = {"Authorization": ""}
         async with self.session.post(url, json=body, headers=headers) as response:

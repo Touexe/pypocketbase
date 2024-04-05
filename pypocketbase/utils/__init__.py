@@ -42,7 +42,7 @@ def as_result(*exceptions: Type[TBE]):
                 return Ok(await func(*args, **kwargs))
             except exceptions as exc:
                 if use_result is False:
-                    raise exc
+                    raise
                 return Err(exc)
 
         return wrapped

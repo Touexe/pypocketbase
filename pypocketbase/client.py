@@ -22,7 +22,7 @@ class Client:
     ) -> None:
         self.BASE_URL = url
         self.TOKEN = token or ""
-        self.HEADERS = {"Authorization": self.TOKEN}
+        self.HEADERS: dict = {"Authorization": self.TOKEN}
         self.session = self.get_session()
         self.use_result = use_result
 
@@ -30,12 +30,14 @@ class Client:
         return self
 
     async def __aexit__(self, exc_type, exc, tb):
-        await self.session.close()
-        self.session = None
+        if self.session is not None:
+            await self.session.close()
+        # self.session = None
 
     async def close(self):
-        await self.session.close()
-        self.session = None
+        if self.session is not None:
+            await self.session.close()
+        # self.session = None
 
     def set_token(self, token: str):
         self.TOKEN = token
@@ -67,9 +69,9 @@ class Client:
 
     async def auth_with_password(
         self, username_or_email: str, password: str, as_admin: bool = False
-    ) -> UserAuthResponse | Result[
-        UserAuthResponse, FailedAuthentication | UnknownError
-    ]:
+    ) -> AdminAuthResponse | UserAuthResponse | Result[
+        AdminAuthResponse, FailedAuthentication | UnknownError
+    ] | Result[UserAuthResponse, FailedAuthentication | UnknownError]:
         auth = (
             self.admins.auth_with_password
             if as_admin
@@ -122,3 +124,5 @@ class Client:
                 return UserAuthResponse(**json_response)
             if admin:
                 return AdminAuthResponse(**json_response)
+
+            raise NotImplementError("Unknown user type")
