@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from .base import baseModel
 
 
-class Admin(BaseModel):
+class Admin(baseModel):
     id: str
     email: str
     avatar: int

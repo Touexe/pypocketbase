@@ -1,14 +1,13 @@
-from pydantic import BaseModel
-
 from .admin import Admin
+from .base import baseModel
 from .record import Record
 
 
-class UserAuthResponse(BaseModel):
+class UserAuthResponse(baseModel):
     token: str
     record: Record
 
 
-class AdminAuthResponse(BaseModel):
+class AdminAuthResponse(baseModel):
     token: str
     admin: Admin
