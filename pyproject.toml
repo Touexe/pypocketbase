@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pypocketbase"
-version = "0.1.0"
+version = "0.3.1"
 description = "Unofficial Async PocketBase client for python. Built on top of aiohttp and pydantic."
 authors = ["Touexe <mrrtou@protonmail.com.com>"]
 readme = "README.md"
